@@ -16,5 +16,6 @@ Setup (local):
    python app.py
 
 Notes:
+
 - Keep `.env` out of version control. Use `.env.example` for the variable names.
 - Use GitHub Secrets or your hosting provider's environment settings for production credentials.
