@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Laporan Kinerja - {{ file.original_filename }}{% endblock %}
+
+{% block content %}
+<h1>Laporan Kinerja: {{ file.original_filename }}</h1>
+<a href="{{ url_for('dashboard') }}">&larr; Kembali ke Dashboard</a>
+<hr>
+<table>
+    <thead>
+        <tr>
+            <th>Algoritma</th>
+            <th>Ukuran Ciphertext (bytes)</th>
+            <th>Waktu Enkripsi (ms)</th>
+            <th>Waktu Dekripsi (ms)</th>
+            <th>Aksi</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for log in logs %}
+        <tr>
+            <td>{{ log.algorithm }}</td>
+            <td>{{ log.ciphertext_size_bytes }}</td>
+            <td>{{ "%.4f"|format(log.encryption_time_ms) }}</td>
+            <td>
+                {% if log.decryption_time_ms %}
+                    {{ "%.4f"|format(log.decryption_time_ms) }}
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+            <td>
+                <a href="{{ url_for('download', log_id=log.id) }}">Download & Uji Dekripsi</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

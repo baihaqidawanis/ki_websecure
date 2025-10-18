@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<h1>Selamat Datang, {{ session.username }}!</h1>
+<a href="{{ url_for('logout') }}">Logout</a>
+<hr>
+
+<h3>Upload Laporan Baru</h3>
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="{{ category }}">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+<form action="{{ url_for('upload') }}" method="POST" enctype="multipart/form-data">
+    <input type="file" name="file" required>
+    <button type="submit">Upload & Enkripsi</button>
+</form>
+<hr>
+
+<h3>File Anda</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Nama File Asli</th>
+            <th>Waktu Upload</th>
+            <th>Aksi</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for file in files %}
+        <tr>
+            <td>{{ file.original_filename }}</td>
+            <td>{{ file.upload_timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+            <td>
+                <a href="{{ url_for('report', file_id=file.id) }}">Lihat Laporan & Download</a>
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="3">Anda belum mengupload file apapun.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
