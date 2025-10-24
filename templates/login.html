@@ -3,7 +3,6 @@
 {% block title %}Login Access{% endblock %}
 
 {% block content %}
-
     <h2>Login Access</h2>
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
@@ -13,9 +12,12 @@
         {% endif %}
     {% endwith %}
     <form method="POST">
-        Username: <input type="text" name="username" required><br>
-        Password: <input type="password" name="password" required><br>
+        <label for="username">Username</label>
+        <input id="username" type="text" name="username" required><br>
+        <label for="password">Password</label>
+        <input id="password" type="password" name="password" required><br>
         <button type="submit">Login</button>
     </form>
+    <br>
     <a href="{{ url_for('register') }}">Belum punya akun? Daftar</a>
 {% endblock %}

@@ -1,11 +1,55 @@
 {% extends "base.html" %}
 
-{% block title %}Laporan Kinerja - {{ file.original_filename }}{% endblock %}
+{% block title %}Laporan - {{ file.original_filename }}{% endblock %}
 
 {% block content %}
-<h1>Laporan Kinerja: {{ file.original_filename }}</h1>
+<h1>Laporan: {{ file.original_filename }}</h1>
 <a href="{{ url_for('dashboard') }}">&larr; Kembali ke Dashboard</a>
+
+<!-- BAGIAN 1: FITUR BERBAGI FILE (HANYA MUNCUL JIKA ANDA PEMILIK) -->
+{% if file.owner_id == session.user_id %}
 <hr>
+<h3>Bagikan Laporan Ini</h3>
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="{{ category }}">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+<form action="{{ url_for('share_file', file_id=file.id) }}" method="POST">
+    <label for="username">Bagikan kepada (Username):</label>
+    <input type="text" id="username" name="username" placeholder="Masukkan username" required>
+    <button type="submit">Bagikan</button>
+</form>
+{% endif %}
+
+<hr>
+
+<!-- BAGIAN 2: MENAMPILKAN ISI LAPORAN EXCEL (DINAMIS) -->
+<h3>Isi Laporan Keuangan</h3>
+<table>
+    <thead>
+        <tr>
+            {% for header in headers %}
+                <th>{{ header }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in rows %}
+        <tr>
+            {% for cell in row %}
+                <td>{{ cell }}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<hr>
+
+<!-- BAGIAN 3: ANALISIS KINERJA ENKRIPSI SELURUH FILE -->
+<h3>Analisis Kinerja Enkripsi File (Untuk Perbandingan)</h3>
 <table>
     <thead>
         <tr>
@@ -30,7 +74,7 @@
                 {% endif %}
             </td>
             <td>
-                <a href="{{ url_for('download', log_id=log.id) }}">Download & Uji Dekripsi</a>
+                <a href="{{ url_for('download', log_id=log.id) }}">Download File Mentah</a>
             </td>
         </tr>
         {% endfor %}
